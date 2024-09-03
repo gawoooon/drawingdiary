@@ -23,11 +23,7 @@ public class GetMemberDTO {
 
     private char gender;
 
-    private String personality;
-
     private String profileImage;
-
-    private int theme;
 
     private String phoneNumber;
 }

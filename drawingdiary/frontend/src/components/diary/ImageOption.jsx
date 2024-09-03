@@ -8,12 +8,12 @@ import { useAuth } from "../../auth/context/AuthContext";
 import Slider from "react-slick";
 import { MdNavigateNext } from "react-icons/md";
 import { MdNavigateBefore } from "react-icons/md";
-import { IoIosArrowForward, IoIosArrowBack } from "react-icons/io";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
 const Container = styled.div`
   display: flex;
+  flex-direction: column; /* 세로 정렬 */
   align-items: center;
   justify-content: center;
   width: 100%;
@@ -53,6 +53,21 @@ const SlideItem = styled.div`
   }
 `;
 
+const DescriptionBox = styled.div`
+  width: 400px;
+  height: 80px;
+  margin: 10px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 10px;
+  background-color: #f9f9f9;
+`;
+
 const ImageOption = ({ onOptionSelect, isRecommenderLoading }) => {
   const LoadingOptions = {
     loop: true,
@@ -80,6 +95,8 @@ const ImageOption = ({ onOptionSelect, isRecommenderLoading }) => {
   const [recommendedStyles, setRecommendedStyles] = useState([]);
   const [otherStyles, setOtherStyles] = useState([]);
 
+  const [description, setDescription] = useState("스타일을 눌러 설정해보세요!"); // 설명 기본 값
+
   const { getToken } = useAuth();
   const accessToken = getToken();
 
@@ -101,7 +118,8 @@ const ImageOption = ({ onOptionSelect, isRecommenderLoading }) => {
     setIsSelected(true);
     setStoredSelectedStyle(option);
     onOptionSelect(true, option);
-    setSelectedIndex(option); // hover
+    setSelectedIndex(option.styleName); // hover
+    setDescription(option.description); // 설명 업데이트
     console.log(option);
   };
 
@@ -164,7 +182,7 @@ const ImageOption = ({ onOptionSelect, isRecommenderLoading }) => {
       const updateRecommendedStyles =
         fallbackResponse.data.predicted_styles.map((styleName) => {
           return ImageStyleLists.find(
-            (style) => style.trim() === styleName.trim()
+            (style) => style.styleName.trim() === styleName.trim()
           );
         });
       setRecommendedStyles(updateRecommendedStyles);
@@ -181,7 +199,7 @@ const ImageOption = ({ onOptionSelect, isRecommenderLoading }) => {
       const updateRecommendedStyles = styleResponse.data.predicted_styles.map(
         (styleName) => {
           return ImageStyleLists.find(
-            (style) => style.trim() === styleName.trim()
+            (style) => style.styleName.trim() === styleName.trim()
           );
         }
       );
@@ -202,7 +220,10 @@ const ImageOption = ({ onOptionSelect, isRecommenderLoading }) => {
     onOptionSelect(isSelected);
 
     const filterNonDuplicateStyles = ImageStyleLists.filter(
-      (style) => !recommendedStyles.map((rStyle) => rStyle).includes(style)
+      (style) =>
+        !recommendedStyles.map((rStyle) => rStyle.styleName).includes(
+          style.styleName
+        )
     );
     setOtherStyles(filterNonDuplicateStyles);
   }, [isSelected, onOptionSelect, recommendedStyles]);
@@ -263,18 +284,21 @@ const ImageOption = ({ onOptionSelect, isRecommenderLoading }) => {
           width={100}
         />
       ) : (
-        <Slider {...settings}>
-          {items.map((item, index) => (
-            <div key={item}>
-              <SlideItem
-                isSelected={selectedIndex === item}
-                onClick={() => handleButtonStyleSelect(item)}
-              >
-                {item}
-              </SlideItem>
-            </div>
-          ))}
-        </Slider>
+        <>
+          <Slider {...settings}>
+            {items.map((item, index) => (
+              <div key={item.styleName}>
+                <SlideItem
+                  isSelected={selectedIndex === item.styleName}
+                  onClick={() => handleButtonStyleSelect(item)}
+                >
+                  {item.styleName}
+                </SlideItem>
+              </div>
+            ))}
+          </Slider>
+          <DescriptionBox>{description}</DescriptionBox>
+        </>
       )}
     </Container>
   );
