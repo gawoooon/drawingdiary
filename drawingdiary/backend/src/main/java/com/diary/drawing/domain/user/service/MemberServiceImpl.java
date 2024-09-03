@@ -58,6 +58,7 @@ public class MemberServiceImpl implements MemberService{
                 .name(memberDTO.getName())
                 .email(memberDTO.getEmail())
                 .password(encPassword)
+                .phoneNumber(memberDTO.getPhoneNumber())
                 .birth(memberDTO.getBirth())
                 .gender(memberDTO.getGender())
                 .build();

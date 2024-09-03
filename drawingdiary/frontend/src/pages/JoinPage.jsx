@@ -195,9 +195,9 @@ const CreateAccount = () => {
           name,
           email: userEmail,
           password,
+          phoneNumber: userPhone,
           birth,
           gender: genderForm,
-          phoneNumber: userPhone
         })
         .then(response => {
           navigate('/FinishPage');

@@ -6,7 +6,7 @@ import LoginBar from "../components/LoginBar/BasicBar";
 import { IoMdPerson } from "react-icons/io";
 import { FaLock } from "react-icons/fa";
 import axios from "axios";
-import { useAuth } from "../auth/context/AuthContext";
+import { useAuth } from "../auth/AuthContext";
 
 const Body = styled.div`
   display: flex;

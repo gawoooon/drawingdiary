@@ -13,7 +13,7 @@ import PasswordLostPage from "./pages/PasswordLostPage.jsx";
 import EmailLostPage from "./pages/EmailLostPage.jsx";
 import MyPage from "./pages/MyPage.jsx";
 import FinishPage from "./pages/FinishPage";
-import { CalendarProvider } from "./components/Calendar2/CalendarProvider.jsx";
+import { CalendarProvider } from "./components/main/Calendar2/CalendarProvider.jsx";
 import ShowDiaryPage from "./pages/ShowDiaryPage.jsx";
 
 function App() {

@@ -2,14 +2,14 @@ import React, { useState, useEffect, useCallback } from "react";
 import styled from "styled-components";
 import { isSameDay, format } from "date-fns";
 import { useNavigate } from "react-router-dom";
-import Calendar2 from "../components/Calendar2";
+import Calendar2 from "../components/main/Calendar2";
 import FalseComponent from "../components/FalseComponent";
-import TrueComponent from "../components/TrueComponent/TrueComponent";
+import TrueComponent from "../components/main/TrueComponent/TrueComponent";
 import { useAuth } from "../auth/AuthContext";
 import {
   CalendarProvider,
   useCalendar,
-} from "../components/Calendar2/CalendarProvider";
+} from "../components/main/Calendar2/CalendarProvider";
 import axios from "axios";
 import Navbar from "../components/sidebar/NavBar";
 

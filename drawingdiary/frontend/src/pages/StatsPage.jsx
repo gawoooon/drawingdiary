@@ -5,7 +5,7 @@ import NavBar from "../components/sidebar/NavBar";
 import GrassGraph from "../components/grid/DaySquare";
 import { format } from 'date-fns';
 import { LineChart, Line, Tooltip } from "recharts";
-import { useAuth } from "../auth/context/AuthContext";
+import { useAuth } from "../auth/AuthContext";
 
 const Body = styled.body`
   display: flex;

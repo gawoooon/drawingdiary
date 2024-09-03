@@ -34,6 +34,9 @@ public class MemberJoinDTO {
     @NotEmpty(message = "패스워드를 비울 수 없습니다.")
     private String password;
 
+    @NotEmpty(message = "전화번호를 비울 수 없습니다.")
+    private String phoneNumber;
+
     @NotNull(message = "생일을 비울 수 없습니다.")
     private LocalDate birth;
 
