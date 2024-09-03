@@ -14,17 +14,23 @@ import { useAuth } from "../auth/AuthContext";
 import { GrUploadOption } from "react-icons/gr";
 import { IoMdRefresh } from "react-icons/io";
 
-const Container = styled.body`
+const Container = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 100%;
   height: 100vh;
-  display: flex;
 `;
 
 const DiaryContainer = styled.section`
   display: flex;
-  width: 84%;
   flex-direction: column;
-  padding: 1% 10% 2% 10%;
+  align-items: center;
+  justify-content: center;
+  width: 90%; /* 중앙 정렬을 위해 너비를 설정 */
+  max-width: 1480px; /* 최대 너비를 설정하여 페이지 중앙에 정렬 */
+  padding: 2% 10%;
+  box-sizing: border-box;
 `;
 
 const TopContainer = styled.div`
@@ -32,29 +38,27 @@ const TopContainer = styled.div`
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  height: 8%;
+  margin-bottom: 20px;
 `;
 
 const MidContainer = styled.div`
   display: flex;
   justify-content: space-between;
   width: 100%;
-  height: 65%;
-  padding: 1% 0 3% 0;
+  height: 480px; /* 높이 설정 */
+  margin-bottom: 20px;
 `;
 
 const BottomContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between;
   width: 100%;
-  height: 27%;
 `;
 
 const LeftBox = styled.div`
   display: flex;
-  width: 49%;
+  width: 48%;
   height: 100%;
 `;
 
@@ -62,12 +66,14 @@ const RightBox = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  width: 49%;
+  width: 48%;
   height: 100%;
 `;
 
 const ImageBox = styled.div`
   display: flex;
+  justify-content: center;
+  align-items: center;
   width: 100%;
   height: 100%;
   background-color: #b4cdfe;
@@ -76,6 +82,8 @@ const ImageBox = styled.div`
 
 const SentimentBox = styled.div`
   display: flex;
+  justify-content: center;
+  align-items: center;
   width: 100%;
   height: 49%;
   background-color: #d2e2fe;
@@ -84,6 +92,8 @@ const SentimentBox = styled.div`
 
 const CommentBox = styled.div`
   display: flex;
+  justify-content: center;
+  align-items: center;
   width: 100%;
   height: 49%;
   background-color: #e1ebff;
@@ -94,15 +104,17 @@ const CommentBox = styled.div`
 
 const StyleBox = styled.div`
   display: flex;
-  width: 500px;
-  height: 29%;
+  justify-content: center;
+  width: 100%;
+  margin-bottom: 20px;
 `;
 
 const TextBox = styled.div`
   display: flex;
   flex-direction: column;
-  width: 500px;
-  height: 69%;
+  align-items: center;
+  width: 100%;
+  max-width: 600px;
   border-radius: 10px;
   border: 1px solid black;
   padding: 10px;
@@ -114,7 +126,7 @@ const BtnBox = styled.div`
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  height: 20%;
+  margin-top: 10px;
 `;
 
 const BtnHover = styled.div`
@@ -176,8 +188,8 @@ function DiaryPage() {
     }
   };
 
-  const handleOptionSelect = (isSelected, storedSelectedStyle) => {
-    setParentSelectedButtonStyle(storedSelectedStyle);
+  const handleOptionSelect = (selectedStyle) => {
+    setParentSelectedButtonStyle(selectedStyle); // selectedStyle로 값을 직접 전달
   };
 
   const handleDiaryTextChange = (newText) => {

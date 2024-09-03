@@ -16,7 +16,7 @@ const Body = styled.div`
 `;
 
 const Title = styled.div`
-  font-size: 36px;
+  font-size: 24px;
   font-weight: 800;
   padding: 10px 0;
 `;
@@ -27,16 +27,18 @@ const JoinBox = styled.form`
   justify-content: center;
   align-items: center;
   width: 600px;
-  height: 750px; /* 높이를 늘려서 전화번호 입력 필드 추가에 맞춤 */
+  height: 750px;
 `;
 
 const InnerBox = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   width: inherit;
-  height: 600px; /* 높이를 늘려서 전화번호 입력 필드 추가에 맞춤 */
+  height: auto;
+  min-height: 240px;
+  margin: 10px 0;
 `;
 
 const MoveButton = styled.button`
@@ -170,6 +172,7 @@ const CreateAccount = () => {
     const [message, setMessage] = useState('');
     const [isEmailVerified, setIsEmailVerified] = useState(false);
     const [isPhoneVerified, setIsPhoneVerified] = useState(false);
+    const [currentStep, setCurrentStep] = useState(1); // 현재 단계
 
     const navigate = useNavigate();
     const confirmPasswordRef = useRef();
@@ -177,38 +180,53 @@ const CreateAccount = () => {
     const handleSubmit = (event) => {
         event.preventDefault();
 
-        if(!name || !year || !month || !day || !gender || !userEmail || !certificateEmail || !userPhone || !certificatePhoneNumber || !password || !confirmPassword || !isEmailVerified || !isPhoneVerified) {
-          setMessage("모든 입력란을 채워주세요.");
-          return;
-        }
-
-        if(password !== confirmPassword) {
-          setMessage("비밀번호가 일치하지 않습니다.");
-          confirmPasswordRef.current.focus();
-          return;
-        }
-
-        const birth = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
-        const genderForm = gender === "female" ? "F" : gender === "male" ? "M" : "S";
-        
-        axios.post('http://localhost:8080/api/join', {
-          name,
-          email: userEmail,
-          password,
-          phoneNumber: userPhone,
-          birth,
-          gender: genderForm,
-        })
-        .then(response => {
-          navigate('/FinishPage');
-        })
-        .catch(error => {
-          if(error.response && error.response.status === 409) {
-            setMessage(error.response.data.message);
-          } else {
-            console.log('Error: ', error);
+        if(currentStep === 1) {
+          if(!name || !year || !month || !day || !gender) {
+            setMessage("모든 입력란을 채워주세요.");
+            return;
           }
-        });
+          setCurrentStep(2); // 2단계로 이동
+        } else if(currentStep === 2) {
+          if(!userEmail || !certificateEmail || !password || !confirmPassword || !isEmailVerified) {
+            setMessage("모든 입력란을 채워주세요.");
+            return;
+          }
+
+          if(password !== confirmPassword) {
+            setMessage("비밀번호가 일치하지 않습니다.");
+            confirmPasswordRef.current.focus();
+            return;
+          }
+
+          setCurrentStep(3); // 3단계로 이동
+        } else if(currentStep === 3) {
+          if(!userPhone || !certificatePhoneNumber || !isPhoneVerified) {
+            setMessage("모든 입력란을 채워주세요.");
+            return;
+          }
+
+          const birth = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+          const genderForm = gender === "female" ? "F" : gender === "male" ? "M" : "S";
+          
+          axios.post('http://localhost:8080/api/join', {
+            name,
+            email: userEmail,
+            password,
+            phoneNumber: userPhone,
+            birth,
+            gender: genderForm,
+          })
+          .then(response => {
+            navigate('/FinishPage');
+          })
+          .catch(error => {
+            if(error.response && error.response.status === 409) {
+              setMessage(error.response.data.message);
+            } else {
+              console.log('Error: ', error);
+            }
+          });
+        }
     };
 
     const sendEmail = async (event) => {
@@ -284,96 +302,129 @@ const CreateAccount = () => {
         <JoinBox autoComplete="off">
           <Title>계정 만들기</Title>
           <InnerBox>
-            <LongField
-              id="name"
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="이름"
-            />
+            {/* 각 단계별로 입력 필드 렌더링 */}
+            {currentStep === 1 && (
+              <>
+                {/* 1단계: 이름, 생년월일, 성별 */}
+                <LongField
+                  id="name"
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="이름"
+                />
 
-            <BirthDayContainer>
-              <ShortField
-                id="year"
-                type="text"
-                value={year}
-                onChange={(e) => setYear(e.target.value)}
-                placeholder="연"
-              />
+                <BirthDayContainer>
+                  <ShortField
+                    id="year"
+                    type="text"
+                    value={year}
+                    onChange={(e) => setYear(e.target.value)}
+                    placeholder="연"
+                  />
 
-              <SelectMonthContainer 
-                name='month'
-                id='month'
-                value={month}
-                onChange={ (e) => setMonth(e.target.value)}
-                style={{ color: month === "" ? '#808080' : 'initial', paddingTop: '2px' }}>
-                <option value="" disabled style={{ color: 'grey'}}>월</option>
-                {[...Array(12)].map((_, index) => (
-                  <option key={index + 1} value={index + 1}>
-                    {index + 1}월
-                  </option>
-                ))}
-              </SelectMonthContainer>
-              
-              <ShortField
-                id="day"
-                type="text"
-                value={day}
-                onChange={(e) => setDay(e.target.value)}
-                placeholder="일"
-              />
-            </BirthDayContainer>
+                  <SelectMonthContainer 
+                    name='month'
+                    id='month'
+                    value={month}
+                    onChange={ (e) => setMonth(e.target.value)}
+                    style={{ color: month === "" ? '#808080' : 'initial', paddingTop: '2px' }}>
+                    <option value="" disabled style={{ color: 'grey'}}>월</option>
+                    {[...Array(12)].map((_, index) => (
+                      <option key={index + 1} value={index + 1}>
+                        {index + 1}월
+                      </option>
+                    ))}
+                  </SelectMonthContainer>
+                  
+                  <ShortField
+                    id="day"
+                    type="text"
+                    value={day}
+                    onChange={(e) => setDay(e.target.value)}
+                    placeholder="일"
+                  />
+                </BirthDayContainer>
 
-            <SelectGenderContainer
-              name='gender'
-              id='gender'
-              value={gender}
-              onChange={ (e) => setGender(e.target.value)}
-              style={{ color: month === "" ? '#808080' : 'initial' }}>
-              <option value="" disabled style={{ color: 'grey'}}>성별</option>
-              <option value="female">여자</option>
-              <option value="male">남자</option>
-              <option value="secret">공개안함</option>
-            </SelectGenderContainer> 
+                <SelectGenderContainer
+                  name='gender'
+                  id='gender'
+                  value={gender}
+                  onChange={ (e) => setGender(e.target.value)}
+                  style={{ color: month === "" ? '#808080' : 'initial' }}>
+                  <option value="" disabled style={{ color: 'grey'}}>성별</option>
+                  <option value="female">여자</option>
+                  <option value="male">남자</option>
+                  <option value="secret">공개안함</option>
+                </SelectGenderContainer>
+              </>
+            )}
 
-            <InputSection>
-              <InputStyle
-                id="email"
-                type="email"
-                value={userEmail}
-                onChange={ (e) => setUserEmail(e.target.value)}
-                placeholder="이메일"/>
-              <LoginBtn text="인증" onClick={sendEmail} />
-            </InputSection>
+            {currentStep === 2 && (
+              <>
+                {/* 2단계: 이메일, 비밀번호 */}
+                <InputSection>
+                  <InputStyle
+                    id="email"
+                    type="email"
+                    value={userEmail}
+                    onChange={ (e) => setUserEmail(e.target.value)}
+                    placeholder="이메일"/>
+                  <LoginBtn text="인증" onClick={sendEmail} />
+                </InputSection>
 
-            <InputSection>
-              <InputStyle
-                id="certification"
-                value={certificateEmail}
-                onChange={(e) => checkCertificateEmail(e.target.value)}
-                placeholder="인증번호 입력"/>
-              <LoginBtn text="확인" onClick={verifyCertification} />
-            </InputSection>
+                <InputSection>
+                  <InputStyle
+                    id="certification"
+                    value={certificateEmail}
+                    onChange={(e) => checkCertificateEmail(e.target.value)}
+                    placeholder="인증번호 입력"/>
+                  <LoginBtn text="확인" onClick={verifyCertification} />
+                </InputSection>
 
-            <InputSection>
-              <PhoneInputStyle
-                id="phone"
-                type="text"
-                value={userPhone}
-                onChange={(e) => setUserPhone(e.target.value)}
-                placeholder="전화번호 입력"/>
-              <LoginBtn text="인증" onClick={sendPhoneVerificationCode} />
-            </InputSection>
+                <LongField
+                  id="password"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="비밀번호"
+                />
 
-            <InputSection>
-              <PhoneInputStyle
-                id="phone-certification"
-                type="text"
-                value={certificatePhoneNumber}
-                onChange={(e) => checkCertificatePhoneNumber(e.target.value)}
-                placeholder="인증번호 입력"/>
-              <LoginBtn text="확인" onClick={verifyPhoneNumber} />
-            </InputSection>
+                <ConfilmPasswordStyle
+                  id="checkPassword"
+                  type="password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  placeholder="비밀번호 확인"
+                  ref={confirmPasswordRef}
+                />
+              </>
+            )}
+
+            {currentStep === 3 && (
+              <>
+                {/* 3단계: 전화번호 인증 */}
+                <InputSection>
+                  <PhoneInputStyle
+                    id="phone"
+                    type="text"
+                    value={userPhone}
+                    onChange={(e) => setUserPhone(e.target.value)}
+                    placeholder="전화번호 입력"/>
+                  <LoginBtn text="인증" onClick={sendPhoneVerificationCode} />
+                </InputSection>
+
+                <InputSection>
+                  <PhoneInputStyle
+                    id="phone-certification"
+                    type="text"
+                    value={certificatePhoneNumber}
+                    onChange={(e) => checkCertificatePhoneNumber(e.target.value)}
+                    placeholder="인증번호 입력"/>
+                  <LoginBtn text="확인" onClick={verifyPhoneNumber} />
+                </InputSection>
+              </>
+            )}
 
             {message && (
               <MessageContainer>
@@ -381,26 +432,9 @@ const CreateAccount = () => {
               </MessageContainer>
             )}
 
-            <LongField
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="비밀번호"
-            />
-
-            <ConfilmPasswordStyle
-              id="checkPassword"
-              type="password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              placeholder="비밀번호 확인"
-              ref={confirmPasswordRef}
-            />
-
           </InnerBox>
           <MoveButton onClick={handleSubmit}>
-            완료
+            {currentStep < 3 ? '다음' : '완료'}
           </MoveButton>
         </JoinBox>
       </Body>

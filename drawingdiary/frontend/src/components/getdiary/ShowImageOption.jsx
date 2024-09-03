@@ -55,7 +55,7 @@ const SlideItem = styled.div`
 
 const DescriptionBox = styled.div`
   width: 400px;
-  height: 80px;
+  height: 20px;
   margin: 10px 0;
   display: flex;
   align-items: center;
@@ -111,6 +111,16 @@ const ShowImageOption = ({
     }
   }, [selectedButtonStyle]);
 
+  useEffect(() => {
+    // 컴포넌트 마운트 시 초기 설명 설정
+    if (parentSelectedButtonStyle) {
+      const initialStyle = ImageStyleLists.find(
+        (style) => style.styleName === parentSelectedButtonStyle
+      );
+      setDescription(initialStyle ? initialStyle.description : "설명을 찾을 수 없습니다.");
+    }
+  }, [parentSelectedButtonStyle]); // parentSelectedButtonStyle이 변경될 때마다 실행
+
   const CountDiary = async () => {
     try {
       const response = await axios.get("http://localhost:8080/api/statistic", {
@@ -150,10 +160,15 @@ const ShowImageOption = ({
       );
       setIsLoading(!isRecommenderLoading);
       const updateRecommendedStyles =
-        fallbackResponse.data.predicted_styles.map((styleName) =>
-          ImageStyleLists.find((style) => style.trim() === styleName.trim())
-        );
+        fallbackResponse.data.predicted_styles.map((styleName) => {
+          const trimmedStyleName = styleName.trim();
+          return ImageStyleLists.find(
+            (style) => style.styleName === trimmedStyleName
+          );
+        }).filter((style) => style !== undefined);
+
       setRecommendedStyles(updateRecommendedStyles);
+      setIsLoading(false);
     } catch (error) {
       const styleResponse = await axios.get(
         "http://localhost:8080/api/test/style",
@@ -161,10 +176,14 @@ const ShowImageOption = ({
       );
       setIsLoading(!isRecommenderLoading);
       const updateRecommendedStyles = styleResponse.data.predicted_styles.map(
-        (styleName) =>
-          ImageStyleLists.find((style) => style.trim() === styleName.trim())
-      );
+        (styleName) => {
+          const trimmedStyleName = styleName.trim();
+          return ImageStyleLists.find(
+            (style) => style.styleName === trimmedStyleName
+          );
+        }).filter((style) => style !== undefined);
       setRecommendedStyles(updateRecommendedStyles);
+      setIsLoading(false);
     }
   };
 
@@ -179,7 +198,7 @@ const ShowImageOption = ({
 
   useEffect(() => {
     const filterNonDuplicateStyles = ImageStyleLists.filter(
-      (style) => !recommendedStyles.map((rStyle) => rStyle).includes(style)
+      (style) => !recommendedStyles.map((rStyle) => rStyle.styleName).includes(style.styleName)
     );
     setOtherStyles(filterNonDuplicateStyles);
   }, [recommendedStyles]);
@@ -237,12 +256,12 @@ const ShowImageOption = ({
                 <SlideItem
                   isSelected={
                     selectedIndex === null
-                      ? parentSelectedButtonStyle === item
-                      : selectedIndex === index
+                      ? parentSelectedButtonStyle === item.styleName
+                      : selectedIndex === item.styleName
                   }
-                  onClick={() => handleButtonStyleSelect(index)}
+                  onClick={() => handleButtonStyleSelect(item.styleName)}
                 >
-                  {item}
+                  {item.styleName}
                 </SlideItem>
               </div>
             ))}

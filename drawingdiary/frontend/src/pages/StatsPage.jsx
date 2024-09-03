@@ -7,19 +7,24 @@ import { format } from 'date-fns';
 import { LineChart, Line, Tooltip } from "recharts";
 import { useAuth } from "../auth/AuthContext";
 
-const Body = styled.body`
+const Body = styled.div`
   display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: flex-start;
+  justify-content: center;
+  align-items: center;
   width: 100vw;
   height: 100vh;
+  box-sizing: border-box;
+  padding: 20px;
+  position: relative; /* 상대적인 위치 설정 */
 `;
 
 const SidebarContainer = styled.div`
-    width: 260px;
-    height: 100%;
-    position: fixed;
+  width: 260px;
+  height: 100%;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 1000; /* NavBar가 가장 앞에 오도록 설정 */
 `;
 
 const RightSection = styled.section`
@@ -27,56 +32,69 @@ const RightSection = styled.section`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: calc(100% - 260px); 
-  height: inherit;
-  padding-left: 520px;
+  width: calc(100% - 260px);
+  height: 100vh; 
+  margin-left: 40px; 
   box-sizing: border-box;
+  padding: 20px;
+  position: relative; /* 부모로부터의 상대적인 위치를 설정 */
+  z-index: 1; /* RightSection의 z-index를 NavBar보다 낮게 설정 */
 `;
 
 const MainContent = styled.section`
   width: 100%;
-  height: 870px;
-  margin-top: 30px;
+  max-width: 1000px;
+  height: 100%;
+  margin: 0 auto; 
   display: flex;
   flex-direction: column;
+  align-items: center;
+  justify-content: center;
   overflow-x: hidden;
   overflow-y: auto;
   box-sizing: border-box;
+  position: relative; /* 상대적 위치 설정 */
+  z-index: 1; /* NavBar보다 뒤에 오도록 설정 */
 `;
 
 const Text = styled.span`
   margin: 10px;
   font-size: 16px;
   font-weight: 500;
+  text-align: center;
 `;
 
 const BigText = styled.span`
   margin: 10px;
   font-size: 20px;
   font-weight: 800;
+  text-align: center;
 `;
 
 const HistoryContainer = styled.section`
   width: 100%;
+  max-width: 1000px;
   height: 202px;
-  margin: 20px 10px;
+  margin: 20px 0; /* 양쪽에 균등한 여백 추가 */
 `;
 
 const StatsContainer = styled.section`
   width: 100%;
-  height: 28%;
-  margin: 20px 10px;
-  padding: 10px;
+  max-width: 1000px;
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: center;
+  justify-content: space-around; /* 요소를 양 끝으로 정렬 */
+  margin: 20px 0;
+  padding: 10px;
+  box-sizing: border-box;
 `;
 
 const StatsContent = styled.div`
-  width: 200px;
+  flex: 1; /* 요소가 동일한 크기로 확장되도록 설정 */
+  max-width: 200px;
   height: 80px;
-  margin: 20px 10px;
+  margin: 10px;
   padding: 10px;
   display: flex;
   flex-direction: column;
@@ -87,12 +105,10 @@ const StatsContent = styled.div`
 `;
 
 const SentimentContainer = styled.section`
-  width: 95%;
-  height: 20%;
-  margin: 20px;
+  width: 100%;
+  max-width: 1000px;
+  margin: 20px 0;
   padding: 10px;
-  border-radius: 20px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -102,24 +118,28 @@ const SentimentContainer = styled.section`
 const ValueContainer = styled.div`
   display: flex;
   flex-direction: column;
+  align-items: center;
+  justify-content: center;
 `;
 
 const Value = styled.div`
   display: flex;
   flex-direction: row;
+  align-items: center;
   margin: 3px 0;
 `;
 
 const Circle = styled.div`
   width: 20px;
   height: 20px;
-  margin: 10px 0 10px 10px;
+  margin: 0 10px;
   border-radius: 50%;
   background-color: ${(props) => props.color};
 `;
 
 const TextValue = styled.div`
-  margin: 10px 20px;
+  margin: 0 10px;
+  text-align: center;
 `;
 
 function StatsPage() {
@@ -141,7 +161,7 @@ function StatsPage() {
 
   const RenderLineChat = () => {
     return (
-      <LineChart width={800} height={180} data={sentiData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+      <LineChart width={1000} height={180} data={sentiData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
         <Tooltip />
         <Line
           type="monotone"

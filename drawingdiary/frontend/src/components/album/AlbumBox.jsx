@@ -17,7 +17,7 @@ const AlbumContainer = styled.div`
     width: 100%;
     height: 231px;
     padding: 2px;
-    background-color: rgba(237, 237, 237, 0.3);
+    background-color: rgba(237, 237, 237, 0.5);
     border-radius: 10px;
 `;
 
@@ -83,7 +83,6 @@ const AlbumHeaders = styled.div`
 
 const CategoryName = styled.div`
     font-size: 20px;
-    font-weight: bold;
 `;
 
 const TrashIcon = styled(CgTrash)`
@@ -225,7 +224,7 @@ function AlbumBox({ onErrorMessage }) {
                                     justifyContent: 'center',
                                     alignItems: 'center',
                                     height: '100%',
-                                    color: '#b3b3b3'
+                                    color: '#1f1f1f'
                                 }}>
                                     앨범에 일기를 추가하려면 먼저 작성하세요.
                                 </div>

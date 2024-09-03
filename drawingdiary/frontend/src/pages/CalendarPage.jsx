@@ -14,34 +14,36 @@ import axios from "axios";
 import Navbar from "../components/sidebar/NavBar";
 
 const Body = styled.div`
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    align-items: flex-start;
-    width: 100vw;
-    height: 100vh;
+  display: flex;
+  flex-direction: row;
+  justify-content: center; /* 중앙 정렬 */
+  align-items: center; /* 중앙 정렬 */
+  width: 100vw;
+  height: 100vh;
 `;
 
 const SidebarContainer = styled.div`
-    width: 260px;
-    height: 100%;
-    position: fixed;
+  width: 260px;
+  height: 100%;
+  position: fixed;
+  left: 0;
 `;
 
 const CalendarBox = styled.div`
   display: flex;
   flex-direction: row;
-  justify-content: center;
-  align-items: center;
+  justify-content: center; /* 중앙 정렬 */
+  align-items: center; /* 중앙 정렬 */
   width: calc(100% - 260px); 
   height: inherit;
-  padding-left: 520px;
   box-sizing: border-box;
+  margin-left: 260px; /* 사이드바 너비만큼 왼쪽 여백 */
 `;
 
 const MiddleBox = styled.div`
   display: flex;
   width: 50%;
+  max-width: 600px; /* 최대 너비 설정 */
   height: 800px;
   border-radius: 30px;
   margin: 20px;
@@ -51,6 +53,7 @@ const MiddleBox = styled.div`
 const RightBox = styled.div`
   display: flex;
   width: 50%;
+  max-width: 600px; /* 최대 너비 설정 */
   flex-direction: column;
   justify-content: center;
   align-items: center;
@@ -109,8 +112,8 @@ function CalendarPage() {
   }, [fetchUserName]);
 
   const handleDateClick = async (day) => {
-    setSelectedDate(day); // selectedDate 상태 업데이트
-    setSelectedDateHasData(true); // selectedDate에 데이터가 존재하는지
+    setSelectedDate(day);
+    setSelectedDateHasData(true);
   };
 
   const handleEdit = async () => {

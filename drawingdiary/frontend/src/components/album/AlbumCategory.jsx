@@ -61,8 +61,7 @@ const AlbumCategory = ({ onSelectAlbum }) => {
 
   return (
     <CategoryBox>
-      <MdCreateNewFolder size={24} />
-      {/* <text style={{ fontSize: "15px" }}>앨범에 추가</text> */}
+      <text style={{ fontSize: "16px" }}>앨범</text>
       <CategoryStyle onChange={handleAlbumChange} value={selectedAlbumID}>
         {categoryList.map((keyword) => (
           <option key={keyword.memberID} value={keyword.albumID}>

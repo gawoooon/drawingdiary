@@ -21,10 +21,11 @@ const Container = styled.div`
   .slick-slider {
     width: 450px;
     box-sizing: border-box;
+    height: 26px;
   }
   .slick-prev,
   .slick-next {
-    display: ${(props) => (props.show ? "block" : "none")};
+    display: flex;
     align-items: center;
     justify-content: center;
     color: black;
@@ -54,7 +55,7 @@ const SlideItem = styled.div`
 
 const DescriptionBox = styled.div`
   width: 400px;
-  height: 80px;
+  height: 20px;
   margin: 10px 0;
   display: flex;
   align-items: center;
@@ -67,29 +68,62 @@ const DescriptionBox = styled.div`
   background-color: #f9f9f9;
 `;
 
-const ImageOption = ({ onOptionSelect, isRecommenderLoading }) => {
+const ShowImageOption = ({
+  onOptionSelect,
+  isRecommenderLoading,
+  selectedOption,
+  parentSelectedButtonStyle,
+}) => {
   const LoadingOptions = {
     loop: true,
     autoplay: true,
     animationData: imageLoading,
   };
+
   const [selectedIndex, setSelectedIndex] = useState(null);
+  const [countDiary, setCountDiary] = useState(0);
   const [selectedButtonStyle, setSelectedButtonStyle] = useState(null);
+  const [storedSelectedStyle, setStoredSelectedStyle] = useState(parentSelectedButtonStyle); // Initialize with parentSelectedButtonStyle
   const [isLoading, setIsLoading] = useState(true);
   const [userAge, setUserAge] = useState(0);
   const [userGender, setUserGender] = useState("");
   const [recommendedStyles, setRecommendedStyles] = useState([]);
   const [otherStyles, setOtherStyles] = useState([]);
-  const [description, setDescription] = useState("스타일을 눌러 설정해보세요!"); 
+  const [description, setDescription] = useState("스타일을 눌러 설정해보세요!");
 
   const { getToken } = useAuth();
   const accessToken = getToken();
 
-  const handleButtonStyleSelect = (option) => {
-    setSelectedButtonStyle(option);
-    onOptionSelect(true, option);
-    setSelectedIndex(option.styleName);
-    setDescription(option.description);
+const handleButtonStyleSelect = (styleName) => {
+  setSelectedButtonStyle(styleName);
+  setStoredSelectedStyle(styleName);
+  onOptionSelect(styleName); // onOptionSelect에 정확한 스타일 이름을 전달
+  setSelectedIndex(styleName);
+
+  const selectedStyle = ImageStyleLists.find(
+    (style) => style.styleName === styleName
+  );
+
+  setDescription(selectedStyle ? selectedStyle.description : "설명을 찾을 수 없습니다.");
+  };
+
+  useEffect(() => {
+    if (selectedButtonStyle !== null) {
+      setStoredSelectedStyle(selectedButtonStyle);
+    }
+  }, [selectedButtonStyle]);
+
+  const CountDiary = async () => {
+    try {
+      const response = await axios.get("http://localhost:8080/api/statistic", {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      setCountDiary(response.data.lawn.total);
+    } catch (error) {
+      console.log("error");
+    }
   };
 
   const fetchUserInfo = async () => {
@@ -102,57 +136,76 @@ const ImageOption = ({ onOptionSelect, isRecommenderLoading }) => {
 
       const birthYear = parseInt(response.data.birth.split("-")[0]);
       const currentYear = new Date().getFullYear();
-
       setUserAge(currentYear - birthYear);
       setUserGender(response.data.gender);
     } catch (error) {
-      console.error("Error fetching user info: ", error);
+      console.log("error: ", error);
     }
   };
 
   const fetchOptionStyle = async () => {
     try {
-      const response = await axios.post(
+      const fallbackResponse = await axios.post(
         "http://localhost:8080/api/style",
-        { age: userAge, gender: userGender },
-        { headers: { Authorization: `Bearer ${accessToken}` } }
+        {
+          age: userAge,
+          gender: userGender,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
       );
-
-      setIsLoading(!isRecommenderLoading);
-
-      const updateRecommendedStyles = response.data.predicted_styles.map(
-        (styleName) => {
+      const updateRecommendedStyles =
+        fallbackResponse.data.predicted_styles.map((styleName) => {
+          const trimmedStyleName = styleName.trim(); 
           return ImageStyleLists.find(
-            (style) => style.styleName.trim() === styleName.trim()
+            (style) => style.styleName === trimmedStyleName
           );
+        }).filter((style) => style !== undefined);
+      
+      setRecommendedStyles(updateRecommendedStyles);
+      setIsLoading(false);
+    } catch (error) {
+      console.log('error: ', error);
+      const styleResponse = await axios.get(
+        "http://localhost:8080/api/test/style",
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
         }
       );
 
+      const updateRecommendedStyles = styleResponse.data.predicted_styles.map(
+        (styleName) => {
+          const trimmedStyleName = styleName.trim(); 
+          return ImageStyleLists.find(
+            (style) => style.styleName === trimmedStyleName
+          );
+        }).filter((style) => style !== undefined);
+
       setRecommendedStyles(updateRecommendedStyles);
-    } catch (error) {
-      console.error("Error fetching style options: ", error);
+      setIsLoading(false);
     }
   };
 
   useEffect(() => {
+    CountDiary();
     if (userAge !== 0 || userGender !== "") {
       fetchOptionStyle();
     } else {
       fetchUserInfo();
     }
-  }, [userAge, userGender]);
+  }, [userAge, userGender, countDiary]);
 
   useEffect(() => {
-    onOptionSelect(selectedButtonStyle !== null);
-
     const filterNonDuplicateStyles = ImageStyleLists.filter(
-      (style) =>
-        !recommendedStyles.map((rStyle) => rStyle.styleName).includes(
-          style.styleName
-        )
+      (style) => !recommendedStyles.map((rStyle) => rStyle.styleName).includes(style.styleName)
     );
     setOtherStyles(filterNonDuplicateStyles);
-  }, [selectedButtonStyle, onOptionSelect, recommendedStyles]);
+  }, [recommendedStyles]);
 
   const items = [...recommendedStyles, ...otherStyles];
 
@@ -164,7 +217,31 @@ const ImageOption = ({ onOptionSelect, isRecommenderLoading }) => {
     slidesToScroll: 5,
     nextArrow: <MdNavigateNext />,
     prevArrow: <MdNavigateBefore />,
+    beforeChange: (_, next) => {
+      const prevButton = document.querySelector(".slick-prev");
+      const nextButton = document.querySelector(".slick-next");
+
+      if (next === 0) {
+        prevButton.style.display = "none";
+      } else {
+        prevButton.style.display = "flex";
+      }
+
+      if (next >= items.length - 5) {
+        nextButton.style.display = "none";
+      } else {
+        nextButton.style.display = "flex";
+      }
+    },
   };
+
+  useEffect(() => {
+    const prevButton = document.querySelector(".slick-prev");
+    const nextButton = document.querySelector(".slick-next");
+
+    if (prevButton) prevButton.style.display = "none";
+    if (nextButton && items.length === 5) nextButton.style.display = "none";
+  }, [items.length]);
 
   return (
     <Container>
@@ -178,11 +255,15 @@ const ImageOption = ({ onOptionSelect, isRecommenderLoading }) => {
       ) : (
         <>
           <Slider {...settings}>
-            {items.map((item) => (
-              <div key={item.styleName}>
+            {items.map((item, index) => (
+              <div key={index}>
                 <SlideItem
-                  isSelected={selectedIndex === item.styleName}
-                  onClick={() => handleButtonStyleSelect(item)}
+                  isSelected={
+                    selectedIndex === null
+                      ? parentSelectedButtonStyle === item.styleName
+                      : selectedIndex === item.styleName
+                  }
+                  onClick={() => handleButtonStyleSelect(item.styleName)}
                 >
                   {item.styleName}
                 </SlideItem>
@@ -196,4 +277,4 @@ const ImageOption = ({ onOptionSelect, isRecommenderLoading }) => {
   );
 };
 
-export default ImageOption;
+export default ShowImageOption;
