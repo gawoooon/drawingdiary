@@ -1,14 +1,12 @@
 import React, { useState, useEffect, useCallback } from "react";
 import styled from "styled-components";
-import Background from "../components/Background/index2";
 import NavBar from "../components/sidebar/NavBar";
 import Information from "../components/mypage/Information";
 import Profile from "../components/mypage/Profile";
-import Theme from "../components/mypage/Theme";
 import Popup from "../components/mypage/Popup";
 import PopupPassword from "../components/mypage/PopupPassword";
 import axios from "axios";
-import { useAuth } from "../auth/context/AuthContext";
+import { useAuth } from "../auth/AuthContext";
 
 const Body = styled.div`
   display: flex;
@@ -35,7 +33,6 @@ const MyPageBody = styled.div`
 `;
 
 function MyPage() {
-  const [backgroundColor, setBackgroundColor] = useState("");
   const [isPopupVisible, setPopupVisible] = useState(false); // 팝업 창의 가시성을 관리하는 상태
   const [isPopupPassword, setPopupPassword] = useState(false);
 

@@ -3,17 +3,16 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Lottie from "react-lottie";
 import imageLoading from "../../animation/imageLodding.json";
-import ImageStyleLists from "./ImageStyleLists";
-import { useAuth } from "../../auth/context/AuthContext";
+import ImageStyleLists from "../styleList/ImageStyleLists";
+import { useAuth } from "../../auth/AuthContext";
 import Slider from "react-slick";
-import { MdNavigateNext } from "react-icons/md";
-import { MdNavigateBefore } from "react-icons/md";
+import { MdNavigateNext, MdNavigateBefore } from "react-icons/md";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
 const Container = styled.div`
   display: flex;
-  flex-direction: column; /* 세로 정렬 */
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   width: 100%;
@@ -28,7 +27,7 @@ const Container = styled.div`
     display: ${(props) => (props.show ? "block" : "none")};
     align-items: center;
     justify-content: center;
-    color: black; // 화살표 색상을 검정색으로 설정
+    color: black;
     cursor: pointer;
     font-size: 24px;
   }
@@ -74,72 +73,23 @@ const ImageOption = ({ onOptionSelect, isRecommenderLoading }) => {
     autoplay: true,
     animationData: imageLoading,
   };
-  const [selectedIndex, setSelectedIndex] = useState(null); // hover
-  const [currentPage, setCurrentPage] = useState(0); // 버튼 첫페이지
-  const [countDiary, setCountDiary] = useState(0);
-
-  const [displayLeft, setDisplayLeft] = useState("flex"); // 초기 상태는 'flex'
-  const [displayRight, setDisplayRight] = useState("none"); // 초기 상태는 'none'
-  const [openBtn, setOpenBtn] = useState("더보기");
-
+  const [selectedIndex, setSelectedIndex] = useState(null);
   const [selectedButtonStyle, setSelectedButtonStyle] = useState(null);
-  const [storedSelectedStyle, setStoredSelectedStyle] = useState(null);
-
-  const [isSelected, setIsSelected] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-
-  const [userName, setUserName] = useState("");
   const [userAge, setUserAge] = useState(0);
   const [userGender, setUserGender] = useState("");
-
   const [recommendedStyles, setRecommendedStyles] = useState([]);
   const [otherStyles, setOtherStyles] = useState([]);
-
-  const [description, setDescription] = useState("스타일을 눌러 설정해보세요!"); // 설명 기본 값
+  const [description, setDescription] = useState("스타일을 눌러 설정해보세요!"); 
 
   const { getToken } = useAuth();
   const accessToken = getToken();
 
-  // '더보기'/'닫기' 버튼 클릭 핸들러
-  const handleOpen = () => {
-    if (displayLeft === "flex") {
-      setDisplayLeft("none");
-      setDisplayRight("flex");
-      setOpenBtn("닫기");
-    } else {
-      setDisplayLeft("flex");
-      setDisplayRight("none");
-      setOpenBtn("더보기");
-    }
-  };
-
   const handleButtonStyleSelect = (option) => {
     setSelectedButtonStyle(option);
-    setIsSelected(true);
-    setStoredSelectedStyle(option);
     onOptionSelect(true, option);
-    setSelectedIndex(option.styleName); // hover
-    setDescription(option.description); // 설명 업데이트
-    console.log(option);
-  };
-
-  useEffect(() => {
-    if (selectedButtonStyle !== null) {
-      setStoredSelectedStyle(selectedButtonStyle);
-    }
-  }, [selectedButtonStyle]);
-
-  const CountDiary = async () => {
-    try {
-      const response = await axios.get("http://localhost:8080/api/statistic", {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
-      setCountDiary(response.data.lawn.total);
-    } catch (error) {
-      console.log("error");
-    }
+    setSelectedIndex(option.styleName);
+    setDescription(option.description);
   };
 
   const fetchUserInfo = async () => {
@@ -154,70 +104,46 @@ const ImageOption = ({ onOptionSelect, isRecommenderLoading }) => {
       const currentYear = new Date().getFullYear();
 
       setUserAge(currentYear - birthYear);
-
-      const genderChar = response.data.gender;
-
-      setUserGender(genderChar);
-      setUserName(response.data.name);
+      setUserGender(response.data.gender);
     } catch (error) {
-      console.log("error: ", error);
+      console.error("Error fetching user info: ", error);
     }
   };
 
   const fetchOptionStyle = async () => {
     try {
-      const fallbackResponse = await axios.post(
+      const response = await axios.post(
         "http://localhost:8080/api/style",
-        {
-          age: userAge,
-          gender: userGender,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
+        { age: userAge, gender: userGender },
+        { headers: { Authorization: `Bearer ${accessToken}` } }
       );
+
       setIsLoading(!isRecommenderLoading);
-      const updateRecommendedStyles =
-        fallbackResponse.data.predicted_styles.map((styleName) => {
-          return ImageStyleLists.find(
-            (style) => style.styleName.trim() === styleName.trim()
-          );
-        });
-      setRecommendedStyles(updateRecommendedStyles);
-    } catch (error) {
-      const styleResponse = await axios.get(
-        "http://localhost:8080/api/test/style",
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-      setIsLoading(!isRecommenderLoading);
-      const updateRecommendedStyles = styleResponse.data.predicted_styles.map(
+
+      const updateRecommendedStyles = response.data.predicted_styles.map(
         (styleName) => {
           return ImageStyleLists.find(
             (style) => style.styleName.trim() === styleName.trim()
           );
         }
       );
+
       setRecommendedStyles(updateRecommendedStyles);
+    } catch (error) {
+      console.error("Error fetching style options: ", error);
     }
   };
 
   useEffect(() => {
-    CountDiary();
     if (userAge !== 0 || userGender !== "") {
       fetchOptionStyle();
     } else {
       fetchUserInfo();
     }
-  }, [userAge, userGender, countDiary]);
+  }, [userAge, userGender]);
 
   useEffect(() => {
-    onOptionSelect(isSelected);
+    onOptionSelect(selectedButtonStyle !== null);
 
     const filterNonDuplicateStyles = ImageStyleLists.filter(
       (style) =>
@@ -226,7 +152,7 @@ const ImageOption = ({ onOptionSelect, isRecommenderLoading }) => {
         )
     );
     setOtherStyles(filterNonDuplicateStyles);
-  }, [isSelected, onOptionSelect, recommendedStyles]);
+  }, [selectedButtonStyle, onOptionSelect, recommendedStyles]);
 
   const items = [...recommendedStyles, ...otherStyles];
 
@@ -238,41 +164,7 @@ const ImageOption = ({ onOptionSelect, isRecommenderLoading }) => {
     slidesToScroll: 5,
     nextArrow: <MdNavigateNext />,
     prevArrow: <MdNavigateBefore />,
-    beforeChange: (_, next) => {
-      const prevButton = document.querySelector(".slick-prev");
-      const nextButton = document.querySelector(".slick-next");
-
-      setCurrentPage(next);
-
-      if (next === 0) {
-        prevButton.style.display = "none";
-      } else {
-        prevButton.style.display = "flex";
-      }
-
-      if (next >= items.length - 5) {
-        nextButton.style.display = "none";
-      } else {
-        nextButton.style.display = "flex";
-      }
-    },
   };
-
-  // 컴포넌트가 처음 렌더링될 때 실행되는 useEffect
-  useEffect(() => {
-    const prevButton = document.querySelector(".slick-prev");
-    const nextButton = document.querySelector(".slick-next");
-
-    if (prevButton) {
-      // 첫 페이지일 때 왼쪽 화살표 숨김
-      prevButton.style.display = "none";
-    }
-
-    if (nextButton && items.length == 5) {
-      // 아이템 수가 슬라이드에 보여지는 수 이하일 때 오른쪽 화살표 숨김
-      nextButton.style.display = "none";
-    }
-  }, [items.length]); // 빈 배열을 전달하여 처음 렌더링 시에만 실행되도록 설정
 
   return (
     <Container>
@@ -286,7 +178,7 @@ const ImageOption = ({ onOptionSelect, isRecommenderLoading }) => {
       ) : (
         <>
           <Slider {...settings}>
-            {items.map((item, index) => (
+            {items.map((item) => (
               <div key={item.styleName}>
                 <SlideItem
                   isSelected={selectedIndex === item.styleName}

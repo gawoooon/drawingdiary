@@ -7,7 +7,7 @@ import { SlGraph } from "react-icons/sl";
 import { TbUserEdit } from "react-icons/tb";
 import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { useAuth } from "../../auth/context/AuthContext";
+import { useAuth } from "../../auth/AuthContext";
 
 const SideBarStyle = styled.section`
     display: flex;

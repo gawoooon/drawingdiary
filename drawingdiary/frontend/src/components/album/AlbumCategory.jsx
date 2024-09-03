@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useCategory } from "./CategoryList";
 import axios from "axios";
-import { useAuth } from "../../auth/context/AuthContext";
+import { useAuth } from "../../auth/AuthContext";
 import { MdCreateNewFolder } from "react-icons/md";
 
 const CategoryStyle = styled.select`

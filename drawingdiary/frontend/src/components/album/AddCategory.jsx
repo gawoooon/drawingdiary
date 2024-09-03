@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import SmallButton from "../button/SmallButton";
+import CategoryButton from "../Button/CategoryButton";
 import { useCategory } from "./CategoryList";
 import { MdOutlineAddPhotoAlternate } from "react-icons/md";
 
@@ -138,7 +138,7 @@ const AddCategory = ({ categoryList, isOpen, onclose }) => {
                             onChange={(e) => setNewCategory(e.target.value)} 
                         />
                         <div style={{display: 'flex', justifyContent: 'center', marginLeft: '-10px', marginBottom: '5px', marginTop: '10px'}}>
-                            <SmallButton text="추가" onClick={handleAddButtonClick} />
+                            <CategoryButton text="추가" onClick={handleAddButtonClick} />
                         </div>
                     </ContainerStyle>
                 </ContainerBackground>

@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import Background from "../components/Background";
 import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import JSConfetti from "js-confetti";

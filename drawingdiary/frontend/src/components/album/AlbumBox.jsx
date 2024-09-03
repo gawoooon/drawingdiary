@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { useCategory } from "./CategoryList";
 import Modal from "./Modal";
 import axios from "axios";
-import { useAuth } from "../../auth/context/AuthContext";
+import { useAuth } from "../../auth/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { CgTrash } from "react-icons/cg";
 

@@ -16,14 +16,6 @@ const InfoBox = styled.div`
   box-sizing: border-box;
 `;
 
-const InfoTop = styled.div`
-  width: 100%;
-  height: 15%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-`;
-
 const InfoBtn = styled.button`
   width: 420px;
   height: 48px;

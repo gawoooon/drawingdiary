@@ -15,7 +15,7 @@ const ButtonStyle = styled.button `
     text-align: center;
 `;
 
-const SmallButton = ({ text, onClick }) => {
+const CategoryButton = ({ text, onClick }) => {
     return (
         <ButtonStyle type="button" onClick={onClick}>
             {text}
@@ -23,4 +23,4 @@ const SmallButton = ({ text, onClick }) => {
     )
 }
 
-export default SmallButton
+export default CategoryButton

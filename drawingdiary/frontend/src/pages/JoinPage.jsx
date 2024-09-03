@@ -1,9 +1,9 @@
 import React, { useState, useRef } from 'react';
 import styled from "styled-components";
 import axios from 'axios';
-import { useNavigate, Link } from "react-router-dom";
-import LongInputField from '../components/inputField/LongInputField';
-import ShortInputField from '../components/inputField/ShortInputField';
+import { useNavigate } from "react-router-dom";
+import LongField from '../components/inputField/LongField';
+import ShortField from '../components/inputField/ShortField';
 import LoginBtn from '../components/LoginBtn';
 
 const Body = styled.div`
@@ -27,7 +27,7 @@ const JoinBox = styled.form`
   justify-content: center;
   align-items: center;
   width: 600px;
-  height: 650px;
+  height: 750px; /* 높이를 늘려서 전화번호 입력 필드 추가에 맞춤 */
 `;
 
 const InnerBox = styled.div`
@@ -36,7 +36,7 @@ const InnerBox = styled.div`
   justify-content: space-between;
   align-items: center;
   width: inherit;
-  height: 500px;
+  height: 600px; /* 높이를 늘려서 전화번호 입력 필드 추가에 맞춤 */
 `;
 
 const MoveButton = styled.button`
@@ -80,12 +80,14 @@ const InputStyle = styled.input`
 `;
 
 const PhoneInputStyle = styled.input`
-  height: 40px;
-  width: 450px;
-  padding-left: 10px;
+  height: 44px;
+  width: 296px;
+  margin: 5px 0;
+  border: 0.0625rem solid rgb(237, 237, 237);
+  border-radius: 10px;
   outline: none;
-  font-size: 13px;
-  margin-top: 20px;
+  font-size: 14px;
+  padding: 0 20px;
   &:focus {
     border-color: rgba(106, 156, 253, 0.5);
   }
@@ -167,65 +169,53 @@ const CreateAccount = () => {
     const [confirmPassword, setConfirmPassword] = useState('');
     const [message, setMessage] = useState('');
     const [isEmailVerified, setIsEmailVerified] = useState(false);
+    const [isPhoneVerified, setIsPhoneVerified] = useState(false);
 
     const navigate = useNavigate();
-
     const confirmPasswordRef = useRef();
 
     const handleSubmit = (event) => {
         event.preventDefault();
 
-        if(!name || !year || !month || !day || !gender || !userEmail || !certificateEmail || !password || !confirmPassword || !isEmailVerified) {
+        if(!name || !year || !month || !day || !gender || !userEmail || !certificateEmail || !userPhone || !certificatePhoneNumber || !password || !confirmPassword || !isEmailVerified || !isPhoneVerified) {
           setMessage("모든 입력란을 채워주세요.");
           return;
         }
 
-        // 비밀번호 일치 확인
         if(password !== confirmPassword) {
           setMessage("비밀번호가 일치하지 않습니다.");
           confirmPasswordRef.current.focus();
           return;
         }
 
-        // 생일 형식 설정 부분
         const birth = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
-
-        // 성별 형식 변경
-        let genderForm;
-        if(gender === "female") {
-          genderForm = "F";
-        } else if(gender === "male") {
-          genderForm = "M";
-        } else {
-          genderForm = "S";
-        }
+        const genderForm = gender === "female" ? "F" : gender === "male" ? "M" : "S";
         
-        // 백엔드 api로 데이터 전송
         axios.post('http://localhost:8080/api/join', {
           name,
           email: userEmail,
           password,
           birth,
           gender: genderForm,
+          phoneNumber: userPhone
         })
         .then(response => {
           navigate('/FinishPage');
         })
         .catch(error => {
           if(error.response && error.response.status === 409) {
-            setMessage(error.response.data.message); // 에러 메시지 상태 업데이트
+            setMessage(error.response.data.message);
           } else {
             console.log('Error: ', error);
           }
         });
-
     };
 
     const sendEmail = async (event) => {
       event.preventDefault();
       if(userEmail !== '') {
         try {
-          await axios.post('http://localhost:8080/api/email/codesending', `${userEmail}`, {
+          await axios.post('http://localhost:8080/api/email/codesending', { email: userEmail }, {
             headers: {
               'Content-Type': 'application/json'
             }
@@ -254,13 +244,47 @@ const CreateAccount = () => {
         }
       }
     };
-      
+
+    const sendPhoneVerificationCode = async (event) => {
+      event.preventDefault();
+      if (userPhone) {
+        try {
+          await axios.post('http://localhost:8080/api/sms/codesending-new', { phoneNumber: userPhone }, {
+            headers: { 'Content-Type': 'application/json' }
+          });
+          setMessage("인증번호가 전송되었습니다.");
+        } catch (error) {
+          console.log("error: ", error);
+        }
+      } else {
+        setMessage("전화번호를 입력해주세요!");
+      }
+    };
+
+    const verifyPhoneNumber = async (event) => {
+      event.preventDefault();
+      if (certificatePhoneNumber) {
+        try {
+          await axios.post('http://localhost:8080/api/sms/verify-new', {
+            phoneNumber: userPhone,
+            code: certificatePhoneNumber
+          });
+          setIsPhoneVerified(true);
+          setMessage('전화번호가 인증되었습니다.')
+        } catch (error) {
+          console.log("error: ", error);
+        }
+      } else {
+        setMessage("인증번호를 입력해주세요!");
+      }
+    };
+
     return (
       <Body className='create-account-containers'>
         <JoinBox autoComplete="off">
           <Title>계정 만들기</Title>
           <InnerBox>
-            <LongInputField
+            <LongField
               id="name"
               type="text"
               value={name}
@@ -269,7 +293,7 @@ const CreateAccount = () => {
             />
 
             <BirthDayContainer>
-              <ShortInputField
+              <ShortField
                 id="year"
                 type="text"
                 value={year}
@@ -284,21 +308,14 @@ const CreateAccount = () => {
                 onChange={ (e) => setMonth(e.target.value)}
                 style={{ color: month === "" ? '#808080' : 'initial', paddingTop: '2px' }}>
                 <option value="" disabled style={{ color: 'grey'}}>월</option>
-                <option value="1">1월</option>
-                <option value="2">2월</option>
-                <option value="3">3월</option>
-                <option value="4">4월</option>
-                <option value="5">5월</option>
-                <option value="6">6월</option>
-                <option value="7">7월</option>
-                <option value="8">8월</option>
-                <option value="9">9월</option>
-                <option value="10">10월</option>
-                <option value="11">11월</option>
-                <option value="12">12월</option>
+                {[...Array(12)].map((_, index) => (
+                  <option key={index + 1} value={index + 1}>
+                    {index + 1}월
+                  </option>
+                ))}
               </SelectMonthContainer>
               
-              <ShortInputField
+              <ShortField
                 id="day"
                 type="text"
                 value={day}
@@ -326,7 +343,7 @@ const CreateAccount = () => {
                 value={userEmail}
                 onChange={ (e) => setUserEmail(e.target.value)}
                 placeholder="이메일"/>
-              <LoginBtn text="인증" onClick={(e) => sendEmail(e)} />
+              <LoginBtn text="인증" onClick={sendEmail} />
             </InputSection>
 
             <InputSection>
@@ -335,7 +352,27 @@ const CreateAccount = () => {
                 value={certificateEmail}
                 onChange={(e) => checkCertificateEmail(e.target.value)}
                 placeholder="인증번호 입력"/>
-                <LoginBtn text="확인" onClick={(e) => verifyCertification(e)} />
+              <LoginBtn text="확인" onClick={verifyCertification} />
+            </InputSection>
+
+            <InputSection>
+              <PhoneInputStyle
+                id="phone"
+                type="text"
+                value={userPhone}
+                onChange={(e) => setUserPhone(e.target.value)}
+                placeholder="전화번호 입력"/>
+              <LoginBtn text="인증" onClick={sendPhoneVerificationCode} />
+            </InputSection>
+
+            <InputSection>
+              <PhoneInputStyle
+                id="phone-certification"
+                type="text"
+                value={certificatePhoneNumber}
+                onChange={(e) => checkCertificatePhoneNumber(e.target.value)}
+                placeholder="인증번호 입력"/>
+              <LoginBtn text="확인" onClick={verifyPhoneNumber} />
             </InputSection>
 
             {message && (
@@ -344,7 +381,7 @@ const CreateAccount = () => {
               </MessageContainer>
             )}
 
-            <LongInputField
+            <LongField
               id="password"
               type="password"
               value={password}

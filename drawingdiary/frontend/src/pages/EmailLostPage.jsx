@@ -52,7 +52,7 @@ const PhoneSection = styled.section`
   display: flex;
   flex-direction: row;
   justify-content: center;
-  `;
+`;
 
 const NumberSection = styled.section`
   width: inherit;
@@ -96,40 +96,30 @@ const LoginButton = styled.button`
 `;
 
 function EmailLostPage() {
-  // 핸드폰 번호, 인증번호
   const [phoneNumber, setPhoneNumber] = useState("");
   const [verifyNumber, setVerifyNumber] = useState("");
-
-  // 핸드폰 인증 확인, 새로운 이메일 확인
   const [verifyMessage, setVerifyMessage] = useState(null);
   const [verifyEmail, setVerifyEmail] = useState(null);
-
-  // 새로운 이메일
   const [newEmail, setNewEmail] = useState("");
 
   const navigate = useNavigate();
 
   const goLogin = () => {
-    navigate('/login');
-  }
+    navigate("/login");
+  };
 
   const handlePhonePost = async (event) => {
     event.preventDefault();
-    if (phoneNumber !== "") {
+    if (phoneNumber) {
       try {
-        const response = await axios.post(
+        await axios.post(
           "http://localhost:8080/api/sms/codesending-existed",
-          { phoneNumber: phoneNumber },
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
+          { phoneNumber },
+          { headers: { "Content-Type": "application/json" } }
         );
-        console.log("response", response);
         setVerifyMessage(true);
       } catch (error) {
-        console.log("error: ", error);
+        console.error("Error: ", error);
         setVerifyMessage(false);
       }
     } else {
@@ -139,23 +129,17 @@ function EmailLostPage() {
 
   const handleVerify = async (event) => {
     event.preventDefault();
-    console.log("verifyNumber: ", verifyNumber);
-    if (verifyNumber !== "") {
+    if (verifyNumber) {
       try {
         const response = await axios.post(
           "http://localhost:8080/api/sms/verify-existed",
-          { phoneNumber: phoneNumber, code: verifyNumber },
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
+          { phoneNumber, code: verifyNumber },
+          { headers: { "Content-Type": "application/json" } }
         );
-        console.log("response", response);
         setVerifyEmail(true);
         setNewEmail(response.data.email);
       } catch (error) {
-        console.log("error: ", error);
+        console.error("Error: ", error);
         setVerifyEmail(false);
       }
     } else {
@@ -163,13 +147,13 @@ function EmailLostPage() {
     }
   };
 
-
   return (
     <Body>
       <LoginBody>
         <Title>이메일 찾기</Title>
         <Content>
-          계정에 등록된 휴대폰 번호를 인증하시면<br/>
+          계정에 등록된 휴대폰 번호를 인증하시면
+          <br />
           사용 중인 계정의 이메일을 알려드립니다.
         </Content>
         <InnerBox>
@@ -177,25 +161,22 @@ function EmailLostPage() {
             <LoginBar
               text="전화번호"
               value={phoneNumber}
-              phoneNumber={phoneNumber}
-              verifyMessage={verifyMessage}
-              onChange={(e) => setPhoneNumber(e.target.value)} />
+              onChange={(e) => setPhoneNumber(e.target.value)}
+            />
             <LoginBtn text="전송" onClick={handlePhonePost} />
           </PhoneSection>
           <NumberSection>
             <LoginBar
               text="인증번호 입력"
-              onChange={(e) => setVerifyNumber(e.target.value)} />
+              onChange={(e) => setVerifyNumber(e.target.value)}
+            />
             <LoginBtn text="확인" onClick={handleVerify} />
           </NumberSection>
           <MessageContainer>
             {verifyEmail === true && (
               <Message color="#989898">
-                <>
-                  회원님의 이메일은{"   "}
-                  <span style={{ color: "green" }}>[ {newEmail} ] </span>
-                  {"   "} 입니다.
-                </>
+                회원님의 이메일은{" "}
+                <span style={{ color: "green" }}>[ {newEmail} ]</span> 입니다.
               </Message>
             )}
             {verifyEmail === false && (

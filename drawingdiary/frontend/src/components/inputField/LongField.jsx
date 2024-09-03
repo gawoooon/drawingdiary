@@ -15,7 +15,7 @@ const InputStyle = styled.input`
     }
 `;
 
-const LongInputField = ({ id, type, value, onChange, placeholder }) => {
+const LongField = ({ id, type, value, onChange, placeholder }) => {
 
     return(
         <InputStyle
@@ -28,4 +28,4 @@ const LongInputField = ({ id, type, value, onChange, placeholder }) => {
     )
 };
 
-export default LongInputField;
+export default LongField;

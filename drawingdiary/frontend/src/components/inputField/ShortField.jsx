@@ -15,7 +15,7 @@ const InputStyle = styled.input`
     }
 `;
 
-const ShortInputField = ({ id, type, value, onChange, placeholder }) => {
+const ShortField = ({ id, type, value, onChange, placeholder }) => {
 
     return(
         <InputStyle 
@@ -28,4 +28,4 @@ const ShortInputField = ({ id, type, value, onChange, placeholder }) => {
     )
 };
 
-export default ShortInputField;
+export default ShortField;

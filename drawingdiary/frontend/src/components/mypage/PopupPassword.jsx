@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useState, useEffect } from "react";
 import styled, { keyframes } from "styled-components";
-import { useAuth } from "../../auth/context/AuthContext";
+import { useAuth } from "../../auth/AuthContext";
 
 // 팝업창
 const BackgroundOverlay = styled.div`

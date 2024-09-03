@@ -8,7 +8,7 @@ import {
   MdCheckCircle,
   MdClear,
 } from "react-icons/md";
-import { useAuth } from "../../auth/context/AuthContext";
+import { useAuth } from "../../auth/AuthContext";
 
 // 팝업창
 const BackgroundOverlay = styled.div`

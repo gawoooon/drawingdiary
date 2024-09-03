@@ -6,7 +6,7 @@ import { startOfMonth, endOfMonth, startOfWeek, endOfWeek } from "date-fns";
 import { isSameMonth, isSameDay, addDays } from "date-fns";
 import { useCalendar } from "./CalendarProvider";
 import axios from "axios";
-import { useAuth } from "../../auth/context/AuthContext";
+import { useAuth } from "../auth/context/AuthContext";
 
 const CalendarBox = styled.div`
   width: 800px;

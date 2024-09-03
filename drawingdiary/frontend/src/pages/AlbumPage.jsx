@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import AlbumBox from "../components/album/AlbumBox";
 import NavBar from "../components/sidebar/NavBar";
-import Button from "../components/button/Button";
+import Button from "../components/Button/Button";
 import { useState } from "react";
 import AddCategory from "../components/album/AddCategory";
 import { CategoryProvider } from "../components/album/CategoryList";

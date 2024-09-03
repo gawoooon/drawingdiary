@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import Calendar2 from "../components/Calendar2";
 import FalseComponent from "../components/FalseComponent";
 import TrueComponent from "../components/TrueComponent/TrueComponent";
-import { useAuth } from "../auth/context/AuthContext";
+import { useAuth } from "../auth/AuthContext";
 import {
   CalendarProvider,
   useCalendar,

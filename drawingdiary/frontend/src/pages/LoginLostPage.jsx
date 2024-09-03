@@ -1,8 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-
-import Background from "../components/Background";
 
 import { IoIosLock } from "react-icons/io";
 import { MdEmail } from "react-icons/md";
@@ -78,26 +76,24 @@ function LoginLostPage() {
   };
 
   return (
-    <Background>
-      <Body>
-        <LoginBox>
-          <ClickButton onClick={handleEmail}>
-            <Icon>
-              <MdEmail size={52} />
-            </Icon>
-            <Content>아이디</Content>
-            <Content>찾기</Content>
-          </ClickButton>
-          <ClickButton onClick={handlePassword}>
-            <Icon>
-              <IoIosLock size={52} />
-            </Icon>
-            <Content>비밀번호</Content>
-            <Content>찾기</Content>
-          </ClickButton>
-        </LoginBox>
-      </Body>
-    </Background>
+    <Body>
+      <LoginBox>
+        <ClickButton onClick={handleEmail}>
+          <Icon>
+            <MdEmail size={52} />
+          </Icon>
+          <Content>아이디</Content>
+          <Content>찾기</Content>
+        </ClickButton>
+        <ClickButton onClick={handlePassword}>
+          <Icon>
+            <IoIosLock size={52} />
+          </Icon>
+          <Content>비밀번호</Content>
+          <Content>찾기</Content>
+        </ClickButton>
+      </LoginBox>
+    </Body>
   );
 }
 
