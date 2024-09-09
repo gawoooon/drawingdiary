@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../auth/AuthContext";
+import { useAuth } from "../../../auth/AuthContext";
 import { format } from "date-fns";
 
 const ResultBox = styled.div`

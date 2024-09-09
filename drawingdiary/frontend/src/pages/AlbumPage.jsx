@@ -27,14 +27,14 @@ const RightSection = styled.section`
   justify-content: center;
   align-items: center;
   width: calc(100% - 260px); 
-  height: 100vh; /* 페이지의 전체 높이를 채움 */
-  padding-left: 260px; /* 사이드바 크기와 일치하게 패딩을 설정 */
+  height: 100vh;
+  padding-left: 260px;
   box-sizing: border-box;
 `;
 
 const AlbumContainer = styled.section`
   width: 100%;
-  max-width: 1000px; /* 중앙 정렬을 위해 최대 너비 설정 */
+  max-width: 1000px;
   height: 100%;
   margin-top: 20px;
   display: flex;
@@ -100,8 +100,8 @@ const AlbumPage = () => {
               text="앨범 추가"
               onClick={handleAddCategoryButtonClick}
             ></Button>
-            {isAddCategoryVisible && <AddCategory onClick={handleClose} />}
-            <AddCategory isOpen={isAddCategoryVisible} onClose={handleClose} />
+            {/* AddCategory 컴포넌트를 한 번만 렌더링하고 prop 이름을 맞춤 */}
+            <AddCategory isOpen={isAddCategoryVisible} onclose={handleClose} />
           </AddAlbum>
         </RightSection>
       </Body>

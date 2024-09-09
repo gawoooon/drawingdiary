@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { isSameDay, format } from "date-fns";
 import { useNavigate } from "react-router-dom";
 import Calendar2 from "../components/main/Calendar2";
-import FalseComponent from "../components/FalseComponent";
+import FalseComponent from "../components/main/FalseComponent";
 import TrueComponent from "../components/main/TrueComponent/TrueComponent";
 import { useAuth } from "../auth/AuthContext";
 import {

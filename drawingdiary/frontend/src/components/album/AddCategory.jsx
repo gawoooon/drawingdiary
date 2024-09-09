@@ -62,7 +62,7 @@ const AddCategoryContainer = styled.div`
     justify-content: flex-end;
 `;
 
-const MessageContainer = styled.text`
+const MessageContainer = styled.div`
     font-size: 12px;
     color: #8c8c8c;
     position: absolute;
@@ -73,21 +73,17 @@ const ExitBtn = styled.button`
     color: gray;
     border: none;
     background-color: white;
+    cursor: pointer;
 `;
 
-
-
 const AddCategory = ({ categoryList, isOpen, onclose }) => {
-
-    
     const [newCategory, setNewCategory] = useState("");
     const { addCategory } = useCategory();
     const [showBlankMessage, setShowBlankMessage] = useState(false);
 
-    if(!isOpen) return null;
-    
-    const handleAddButtonClick = () => {
+    if (!isOpen) return null;
 
+    const handleAddButtonClick = () => {
         if (newCategory.trim() === "") {
             setShowBlankMessage(true);
             setTimeout(() => {
@@ -103,29 +99,27 @@ const AddCategory = ({ categoryList, isOpen, onclose }) => {
         } catch (error) {
             console.error("카테고리 추가 중 에러 발생:", error);
         }
-
     };
 
-    return(
+    return (
         <div>
             <AddCategoryContainer>
-
                 <ContainerBackground>
-
                     <ContainerStyle>
-                    <TopContent>
-                        <MdOutlineAddPhotoAlternate size={30} color="3d3d3d" />
+                        <TopContent>
+                            <MdOutlineAddPhotoAlternate size={30} color="3d3d3d" />
+                            <ExitBtn onClick={onclose} style={{ position: 'absolute', top: '10px', right: '10px' }}>
+                                닫기
+                            </ExitBtn>
+                        </TopContent>
 
-                        <ExitBtn onClick={onclose} style={{ position: 'absolute', top: '10px', right: '10px' }}>
-                            닫기
-                        </ExitBtn>
-                    </TopContent>
-                        
-                        <div style={{
-                            display: 'flex',
-                            justifyContent: 'center',
-                            alignItems: 'center'
-                        }}>
+                        <div
+                            style={{
+                                display: 'flex',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                            }}
+                        >
                             {showBlankMessage && (
                                 <MessageContainer>
                                     카테고리를 입력해주세요.
@@ -135,9 +129,17 @@ const AddCategory = ({ categoryList, isOpen, onclose }) => {
                         <AddItem
                             placeholder="앨범 이름을 입력하세요."
                             value={newCategory}
-                            onChange={(e) => setNewCategory(e.target.value)} 
+                            onChange={(e) => setNewCategory(e.target.value)}
                         />
-                        <div style={{display: 'flex', justifyContent: 'center', marginLeft: '-10px', marginBottom: '5px', marginTop: '10px'}}>
+                        <div
+                            style={{
+                                display: 'flex',
+                                justifyContent: 'center',
+                                marginLeft: '-10px',
+                                marginBottom: '5px',
+                                marginTop: '10px',
+                            }}
+                        >
                             <CategoryButton text="추가" onClick={handleAddButtonClick} />
                         </div>
                     </ContainerStyle>

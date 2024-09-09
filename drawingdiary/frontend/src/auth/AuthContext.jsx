@@ -23,9 +23,10 @@ export const AuthProvider = ({ children }) => {
     try {
       const res = await axios.get("http://localhost:8080/api/refresh", {
         headers: {
-          Authorization: `Bearer ${auth.refreshToken}`,
+          Authorization: `Bearer ${auth.accessToken}`,
         },
       });
+      console.log("data : ", res);
       const accessToken = res.data.accessToken; // 수정된 부분
       Cookies.set("accessToken", accessToken, { path: "/" });
       setAuth((prev) => ({ ...prev, accessToken }));
