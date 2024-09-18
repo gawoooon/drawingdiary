@@ -1,10 +1,10 @@
-import styled from "styled-components";
-import AlbumBox from "../components/album/AlbumBox";
-import NavBar from "../components/sidebar/NavBar";
-import Button from "../components/Button/Button";
 import { useState } from "react";
+import styled from "styled-components";
 import AddCategory from "../components/album/AddCategory";
+import AlbumBox from "../components/album/AlbumBox";
 import { CategoryProvider } from "../components/album/CategoryList";
+import Button from "../components/button/Button";
+import NavBar from "../components/sidebar/NavBar";
 
 const Body = styled.body`
   display: flex;

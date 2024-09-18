@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import styled from "styled-components";
-import CategoryButton from "../Button/CategoryButton";
-import { useCategory } from "./CategoryList";
 import { MdOutlineAddPhotoAlternate } from "react-icons/md";
+import styled from "styled-components";
+import CategoryButton from "../button/CategoryButton";
+import { useCategory } from "./CategoryList";
 
 const ContainerBackground = styled.div`
     position: fixed;
