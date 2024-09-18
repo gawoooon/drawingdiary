@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.diary.drawing.domain.album.dto.AlbumListDTO;
 import com.diary.drawing.domain.album.dto.AlbumRequestDTO;
 import com.diary.drawing.domain.album.service.AlbumService;
-import com.diary.drawing.domain.user.repository.MemberRepository;
 import com.diary.drawing.global.jwt.domain.PrincipalDetails;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -28,9 +27,6 @@ public class AlbumController {
 
     @Autowired
     private AlbumService albumService;
-
-    @Autowired
-    private MemberRepository memberRepository;
 
     /* 앨범 추가
      * @Header AccessToken

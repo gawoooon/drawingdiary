@@ -51,8 +51,8 @@ public class SecurityConfig {
                     @Override
                     public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
                         CorsConfiguration configuration = new CorsConfiguration();
-                        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3001", "http://localhost:3000","http://localhost:5001","https://naveropenapi.apigw.ntruss.com/sentiment-analysis/v1/analyze"));    // react 허가
-                        configuration.setAllowedMethods(Arrays.asList("*"));    // "GET", "POST", "PUT", "DELETE"
+                        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3001", "http://localhost:3000","http://localhost:5001","https://naveropenapi.apigw.ntruss.com/sentiment-analysis/v1/analyze","http://localhost", "http://localhost:8080"));    // react 허가
+                        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
                         configuration.setAllowedHeaders(Arrays.asList("*"));
                         configuration.setAllowCredentials(true);    // 일단 허용
                         configuration.setMaxAge(3600L); // 1시간

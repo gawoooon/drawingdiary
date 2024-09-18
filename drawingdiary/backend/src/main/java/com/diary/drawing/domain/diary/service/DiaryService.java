@@ -120,7 +120,6 @@ public class DiaryService {
     public Diary testcreateDiary(DiaryRequestDTO diaryRequestDTO){
 
         // date album member 찾기
-        //TODO: 존재확인 validation 함수 추가로 예외처리
         Album album = albumRepository.findByAlbumID(diaryRequestDTO.getAlbumID());
         Optional<Member> member = memberRepository.findByMemberID(diaryRequestDTO.getMemberID());
         ImageStyle style = imageStyleRepository.findByStyleID(diaryRequestDTO.getStyleID());
@@ -145,7 +144,6 @@ public class DiaryService {
         Diary oldDiary = diaryRepository.findByDiaryID(diaryID);
 
         // date album member 찾기
-        //TODO: 존재확인 validation 함수 추가로 예외처리
         Album a = albumRepository.findByAlbumID(diaryRequestDTO.getAlbumID());
         ImageStyle s = imageStyleRepository.findByStyleID(diaryRequestDTO.getStyleID());
 
