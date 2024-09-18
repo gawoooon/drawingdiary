@@ -5,9 +5,12 @@ plugins {
    id 'application'
 }
 
+jar{
+    enabled = false
+}
+
 application {
-    // 메인클래스 명시
-    mainClass.set('com.diary.drawing.DrawingApplication')
+    mainClass.set('com.diary.drawing.DrawingApplication')       // 메인클래스 명시
 } 
 
 
