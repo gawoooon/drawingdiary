@@ -33,7 +33,7 @@ services:
     tty: true
 
   db:
-    image: mysql
+    image: mysql:8.4.2
     container_name: db
     ports:
       - "5500:3306"
@@ -42,7 +42,7 @@ services:
       - db-config:/etc/mysql
       - db-data:/var/lib/mysql
     environment:
-      - MYSQL_ROOT_PASSWORD=zoLZak@!1321
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
     command:
       - --character-set-server=utf8mb4
       - --collation-server=utf8mb4_bin
@@ -55,7 +55,9 @@ services:
     container_name: redis
     ports:
       - "6379:6379"
-    command: redis-server /usr/local/conf/redis.conf
+    environment:
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+    command: redis-server --requirepass $$REDIS_PASSWORD
     restart: always
     expose:
       - 6379
