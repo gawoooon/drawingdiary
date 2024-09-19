@@ -90,7 +90,7 @@ public class PredictStyleService{
     /* python 예측 모델에서 prediction_styles라는 string 리스트 반환 */
     @Transactional
     public early getStyles(PredictRequestDTO.earlyDTO earlyDTO) {
-        String url = "http://localhost:5001/api/get-styles";
+        String url = "http://recommender:5001/api/get-styles";
 
         // 요청 본문 생성하기
         Map<String, Object> body = new HashMap<>();
@@ -114,7 +114,7 @@ public class PredictStyleService{
     /* python 예측 모델에서 recommended_styles라는 string 리스트 반환 */
     @Transactional
     public history getStyles_history(Long memberID) {
-        String url = "http://localhost:5001/api/get-styles-history";
+        String url = "http://recommender:5001/api/get-styles-history";
 
         // 요청 본문 생성하기
         Map<String, Object> body = new HashMap<>();
