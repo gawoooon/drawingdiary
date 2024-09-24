@@ -123,7 +123,7 @@ const ShowImageOption = ({
 
   const CountDiary = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/api/statistic", {
+      const response = await axios.get("http://drawingdiary.kro.kr/api/statistic", {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
@@ -136,7 +136,7 @@ const ShowImageOption = ({
 
   const fetchUserInfo = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/api/get-member", {
+      const response = await axios.get("http://drawingdiary.kro.kr/api/get-member", {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
@@ -154,7 +154,7 @@ const ShowImageOption = ({
   const fetchOptionStyle = async () => {
     try {
       const fallbackResponse = await axios.post(
-        "http://localhost:8080/api/style",
+        "http://drawingdiary.kro.kr/api/style",
         { age: userAge, gender: userGender },
         { headers: { Authorization: `Bearer ${accessToken}` } }
       );
@@ -171,7 +171,7 @@ const ShowImageOption = ({
       setIsLoading(false);
     } catch (error) {
       const styleResponse = await axios.get(
-        "http://localhost:8080/api/test/style",
+        "http://drawingdiary.kro.kr/api/test/style",
         { headers: { Authorization: `Bearer ${accessToken}` } }
       );
       setIsLoading(!isRecommenderLoading);

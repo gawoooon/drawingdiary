@@ -88,7 +88,7 @@ function CalendarPage() {
   const fetchUserName = useCallback(async () => {
     if (accessToken !== null) {
       try {
-        const response = await axios.get("http://localhost:8080/api/get-member", {
+        const response = await axios.get("http://drawingdiary.kro.kr/api/get-member", {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
@@ -127,7 +127,7 @@ function CalendarPage() {
 
     try {
       const response = await axios.get(
-        `http://localhost:8080/api/diary/${dateString}`,
+        `http://drawingdiary.kro.kr/api/diary/${dateString}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -166,7 +166,7 @@ function CalendarPage() {
   const handleRemove = async () => {
     try {
       await axios.delete(
-        `http://localhost:8080/api/diary/${isSelectedYear}-${isSelectedMonth}-${isSelectedDay}`,
+        `http://drawingdiary.kro.kr/api/diary/${isSelectedYear}-${isSelectedMonth}-${isSelectedDay}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -183,7 +183,7 @@ function CalendarPage() {
   const fetchCalendar = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8080/api/calender/${year}-${month}`,
+        `http://drawingdiary.kro.kr/api/calender/${year}-${month}`,
         {
           headers: {
             'Authorization': `Bearer ${accessToken}`,

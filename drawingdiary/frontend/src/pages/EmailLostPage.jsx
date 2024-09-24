@@ -113,7 +113,7 @@ function EmailLostPage() {
     if (phoneNumber) {
       try {
         await axios.post(
-          "http://localhost:8080/api/sms/codesending-existed",
+          "http://drawingdiary.kro.kr/api/sms/codesending-existed",
           { phoneNumber },
           { headers: { "Content-Type": "application/json" } }
         );
@@ -132,7 +132,7 @@ function EmailLostPage() {
     if (verifyNumber) {
       try {
         const response = await axios.post(
-          "http://localhost:8080/api/sms/verify-existed",
+          "http://drawingdiary.kro.kr/api/sms/verify-existed",
           { phoneNumber, code: verifyNumber },
           { headers: { "Content-Type": "application/json" } }
         );

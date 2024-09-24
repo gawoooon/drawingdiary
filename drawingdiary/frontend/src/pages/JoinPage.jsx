@@ -208,7 +208,7 @@ const CreateAccount = () => {
           const birth = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
           const genderForm = gender === "female" ? "F" : gender === "male" ? "M" : "S";
           
-          axios.post('http://localhost:8080/api/join', {
+          axios.post('http://drawingdiary.kro.kr/api/join', {
             name,
             email: userEmail,
             password,
@@ -233,7 +233,7 @@ const CreateAccount = () => {
       event.preventDefault();
       if(userEmail !== '') {
         try {
-          await axios.post('http://localhost:8080/api/email/codesending', { email: userEmail }, {
+          await axios.post('http://drawingdiary.kro.kr/api/email/codesending', { email: userEmail }, {
             headers: {
               'Content-Type': 'application/json'
             }
@@ -251,7 +251,7 @@ const CreateAccount = () => {
       event.preventDefault();
       if(certificateEmail !== ''){
         try {
-          await axios.post('http://localhost:8080/api/email/verify', {
+          await axios.post('http://drawingdiary.kro.kr/api/email/verify', {
             email: userEmail,
             verificationCode: certificateEmail
           });
@@ -267,7 +267,7 @@ const CreateAccount = () => {
       event.preventDefault();
       if (userPhone) {
         try {
-          await axios.post('http://localhost:8080/api/sms/codesending-new', { phoneNumber: userPhone }, {
+          await axios.post('http://drawingdiary.kro.kr/api/sms/codesending-new', { phoneNumber: userPhone }, {
             headers: { 'Content-Type': 'application/json' }
           });
           setMessage("인증번호가 전송되었습니다.");
@@ -283,7 +283,7 @@ const CreateAccount = () => {
       event.preventDefault();
       if (certificatePhoneNumber) {
         try {
-          await axios.post('http://localhost:8080/api/sms/verify-new', {
+          await axios.post('http://drawingdiary.kro.kr/api/sms/verify-new', {
             phoneNumber: userPhone,
             code: certificatePhoneNumber
           });

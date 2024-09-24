@@ -256,7 +256,7 @@ function ShowDiaryPage() {
     if (newImageUrl) {
       try {
         const responseDiary = await axios.put(
-          `http://localhost:8080/api/diary/${dateString}`,
+          `http://drawingdiary.kro.kr/api/diary/${dateString}`,
           {
             text: diaryText,
             weather: weatherState,

@@ -269,7 +269,7 @@ function DiaryPage() {
     if (newImageUrl) {
       try {
         const responseDiary = await axios.post(
-          "http://localhost:8080/api/diary/add",
+          "http://drawingdiary.kro.kr/api/diary/add",
           {
             text: basicDiaryText,
             weather: weatherState,

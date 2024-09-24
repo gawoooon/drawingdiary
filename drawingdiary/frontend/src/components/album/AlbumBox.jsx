@@ -108,7 +108,7 @@ function AlbumBox({ onErrorMessage }) {
     
     const fetchAlbum = async () => {
         try {
-            const response = await axios.get('http://localhost:8080/api/album/all', {
+            const response = await axios.get('http://drawingdiary.kro.kr/api/album/all', {
                 headers: {
                     'Authorization': `Bearer ${accessToken}`
                 }
@@ -130,7 +130,7 @@ function AlbumBox({ onErrorMessage }) {
 
     const showDetails = async (selectedDate) => {
         try {
-            const response = await axios.get(`http://localhost:8080/api/diary/${selectedDate}`, {
+            const response = await axios.get(`http://drawingdiary.kro.kr/api/diary/${selectedDate}`, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`
                 }

@@ -331,7 +331,7 @@ function Popup({ onClose, profileImage, profileName }) {
     if (phoneNumber !== "") {
       try {
         const response = await axios.post(
-          "http://localhost:8080/api/sms/codesending-new",
+          "http://drawingdiary.kro.kr/api/sms/codesending-new",
           { phoneNumber: phoneNumber },
           {
             headers: {
@@ -353,7 +353,7 @@ function Popup({ onClose, profileImage, profileName }) {
     if (phoneCertification !== "") {
       try {
         const response = await axios.post(
-          "http://localhost:8080/api/sms/verify-new",
+          "http://drawingdiary.kro.kr/api/sms/verify-new",
           {
             phoneNumber: phoneNumber,
             code: phoneCertification,
@@ -375,7 +375,7 @@ function Popup({ onClose, profileImage, profileName }) {
     if (newEmail !== "") {
       try {
         const response = await axios.post(
-          "http://localhost:8080/api/email/codesending",
+          "http://drawingdiary.kro.kr/api/email/codesending",
           { email: newEmail },
           {
             headers: {
@@ -397,7 +397,7 @@ function Popup({ onClose, profileImage, profileName }) {
     if (certification !== "") {
       try {
         const response = await axios.post(
-          "http://localhost:8080/api/email/verify",
+          "http://drawingdiary.kro.kr/api/email/verify",
           {
             email: newEmail,
             verificationCode: certification,
@@ -423,7 +423,7 @@ function Popup({ onClose, profileImage, profileName }) {
     console.log(oldPassword);
     try {
       const response = await axios.post(
-        "http://localhost:8080/api/password",
+        "http://drawingdiary.kro.kr/api/password",
         {
           oldPassword: oldPassword,
         },
@@ -497,7 +497,7 @@ function Popup({ onClose, profileImage, profileName }) {
     );
     try {
       const response = await axios.patch(
-        "http://localhost:8080/api/mypage",
+        "http://drawingdiary.kro.kr/api/mypage",
         {
           newName: newName,
           oldPassword: oldPassword,

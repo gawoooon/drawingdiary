@@ -21,7 +21,7 @@ export const AuthProvider = ({ children }) => {
 
   const refreshToken = async () => {
     try {
-      const res = await axios.get("http://localhost:8080/api/refresh", {
+      const res = await axios.get("http://drawingdiary.kro.kr/api/refresh", {
         headers: {
           Authorization: `Bearer ${auth.accessToken}`,
         },
@@ -104,7 +104,7 @@ export const useAuth = () => useContext(AuthContext);
    const refreshToken = async () => {
      try {
        const res = await axios.get(
-         "http://localhost:8080/api/v1/users/reissue",
+         "http://drawingdiary.kro.kr/api/v1/users/reissue",
          {},
          {
            headers: {

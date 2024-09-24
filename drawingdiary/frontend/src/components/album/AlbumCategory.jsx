@@ -30,7 +30,7 @@ const AlbumCategory = ({ onSelectAlbum }) => {
 
   const fetchBaseCategory = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/api/album/list", {
+      const response = await axios.get("http://drawingdiary.kro.kr/api/album/list", {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },

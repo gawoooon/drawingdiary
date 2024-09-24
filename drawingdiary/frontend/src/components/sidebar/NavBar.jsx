@@ -149,7 +149,7 @@ const Navbar = () => {
         setLoginState(true);
         try {
           const response = await axios.get(
-            "http://localhost:8080/api/calender/recent-five",
+            "http://drawingdiary.kro.kr/api/calender/recent-five",
             {
               headers: {
                 Authorization: `Bearer ${currentAccessToken}`,
@@ -173,7 +173,7 @@ const Navbar = () => {
   const handleLogout = async () => {
     if (accessToken) {
       try {
-        await axios.post("http://localhost:8080/api/logout", null, {
+        await axios.post("http://drawingdiary.kro.kr/api/logout", null, {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },

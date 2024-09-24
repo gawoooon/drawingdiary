@@ -114,7 +114,7 @@ function LoginPage() {
     }
 
     axios
-      .post("http://localhost:8080/api/login", {
+      .post("http://drawingdiary.kro.kr/api/login", {
         email,
         password,
       })

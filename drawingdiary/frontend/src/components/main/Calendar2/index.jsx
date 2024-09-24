@@ -310,7 +310,7 @@ function Calendar2({ onDateClick: parentOnDateClick }) {
 
       try {
         const response = await axios.get(
-          `http://localhost:8080/api/calender/${year}-${month}`,
+          `http://drawingdiary.kro.kr/api/calender/${year}-${month}`,
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,

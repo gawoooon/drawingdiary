@@ -121,7 +121,7 @@ function PopupPassword({ onClose, onPopup }) {
     console.log(oldPassword);
     try {
       const response = await axios.post(
-        "http://localhost:8080/api/password",
+        "http://drawingdiary.kro.kr/api/password",
         {
           oldPassword: oldPassword,
         },

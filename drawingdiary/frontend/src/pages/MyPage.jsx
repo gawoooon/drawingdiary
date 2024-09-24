@@ -59,7 +59,7 @@ function MyPage() {
     if (memberID) {
       try {
         const response = await axios.get(
-          "http://localhost:8080/api/get-member",
+          "http://drawingdiary.kro.kr/api/get-member",
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,

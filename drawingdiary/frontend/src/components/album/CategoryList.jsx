@@ -12,7 +12,7 @@ function useCategoryList (){
     const fetchCategoryList = useCallback(async () => {
         if(memberID) {// 로그인 상태 확인
             try {
-                const response = await axios.get(`http://localhost:8080/api/album/list`, {  //[가원] api /{memberID} 사용X로 수정
+                const response = await axios.get(`http://drawingdiary.kro.kr/api/album/list`, {  //[가원] api /{memberID} 사용X로 수정
                     headers: {
                         'Authorization': `Bearer ${accessToken}`
                     }
@@ -34,7 +34,7 @@ function useCategoryList (){
  
         if (newCategory && !categoryList.some(category => category.albumName === newCategory)) {
             try {
-                await axios.post('http://localhost:8080/api/album', {
+                await axios.post('http://drawingdiary.kro.kr/api/album', {
                     albumName: newCategory,
                 }, {
                     headers: {
@@ -54,7 +54,7 @@ function useCategoryList (){
 
         if(categoryToRemove) {
             try {
-                await axios.delete(`http://localhost:8080/api/album/${categoryToRemove}`, {
+                await axios.delete(`http://drawingdiary.kro.kr/api/album/${categoryToRemove}`, {
                     headers : {
                         'Authorization': `Bearer ${accessToken}`
                     }

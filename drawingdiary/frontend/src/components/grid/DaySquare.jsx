@@ -105,7 +105,7 @@ const GrassGraph = () => {
   useEffect(() => {
     const fetchGrid = async () => {
       try {
-        const response = await axios.get('http://localhost:8080/api/statistic', 
+        const response = await axios.get('http://drawingdiary.kro.kr/api/statistic', 
         {
           headers: {
             'Authorization': `Bearer ${accessToken}`

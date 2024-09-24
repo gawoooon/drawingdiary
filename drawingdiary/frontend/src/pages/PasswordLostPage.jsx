@@ -97,7 +97,7 @@ function PasswordLostPage() {
     if(email !== "") {
       try {
         axios.post(
-          "http://localhost:8080/api/member/resetpassword", { 
+          "http://drawingdiary.kro.kr/api/member/resetpassword", { 
             email: email 
           },
           {
